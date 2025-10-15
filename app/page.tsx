@@ -120,10 +120,10 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6 min-w-0">
           {/* Input Panel */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:sticky lg:top-4">
+          <div className="lg:col-span-1 min-w-0">
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:sticky lg:top-4 min-w-0">
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-800">Usage Inputs</h2>
 
               {/* Premiums and HSA Contributions */}
@@ -507,8 +507,8 @@ export default function Home() {
           </div>
 
           {/* Results Panel */}
-          <div className="lg:col-span-2">
-            <div className="space-y-4 sm:space-y-6">
+          <div className="lg:col-span-2 min-w-0">
+            <div className="space-y-4 sm:space-y-6 min-w-0">
               {Object.entries(plans).map(([key, plan]) => {
                 const result = planResults[key];
                 return (
