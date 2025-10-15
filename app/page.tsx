@@ -127,13 +127,13 @@ export default function Home() {
               <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-800">Usage Inputs</h2>
 
               {/* Premiums and HSA Contributions */}
-              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200 overflow-x-auto">
                 <h3 className="font-semibold text-gray-700 mb-3">Plan Costs</h3>
-                <div className="space-y-3">
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="text-xs font-medium text-gray-500 flex items-center">Plan</div>
-                    <div className="text-xs font-medium text-gray-500 text-center">Monthly Premium</div>
-                    <div className="text-xs font-medium text-gray-500 text-center">HSA Employer Contrib (Annual)</div>
+                <div className="space-y-3 min-w-0">
+                  <div className="grid grid-cols-3 gap-2 min-w-0">
+                    <div className="text-xs font-medium text-gray-500 flex items-center min-w-0">Plan</div>
+                    <div className="text-xs font-medium text-gray-500 text-center min-w-0 break-words">Monthly Premium</div>
+                    <div className="text-xs font-medium text-gray-500 text-center min-w-0 break-words">HSA Employer Contrib (Annual)</div>
                   </div>
                   <div className="grid grid-cols-3 gap-2 items-center">
                     <div className="text-sm font-medium text-gray-700">POS 250</div>
