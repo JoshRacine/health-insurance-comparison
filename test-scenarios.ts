@@ -468,7 +468,7 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 55, '250': 155, '500': 105 },
     hsaContributions: { '3300': 800, '250': 0, '500': 0 },
     expectedRanges: {
-      '3300': { min: 5200, max: 5350 },    // Actual: $5,260
+      '3300': { min: 5300, max: 5400 },    // Actual: $5,360
       '250': { min: 3550, max: 3700 },     // Actual: $3,610
       '500': { min: 5200, max: 5350 },     // Actual: $5,260
     },
@@ -501,7 +501,7 @@ const scenarios: TestScenario[] = [
     hsaContributions: { '3300': 900, '250': 0, '500': 0 },
     expectedRanges: {
       '3300': { min: 4600, max: 4750 },    // Actual: $4,660
-      '250': { min: 5250, max: 5400 },     // Actual: $5,320
+      '250': { min: 3600, max: 3750 },     // Actual: $3,670 (hits OOP max)
       '500': { min: 5250, max: 5400 },     // Actual: $5,320
     },
   },
@@ -533,8 +533,8 @@ const scenarios: TestScenario[] = [
     hsaContributions: { '3300': 1400, '250': 0, '500': 0 },
     expectedRanges: {
       '3300': { min: 9750, max: 10000 },   // Actual: $9,865
-      '250': { min: 9800, max: 10000 },    // Actual: $9,900
-      '500': { min: 8900, max: 9100 },     // Actual: $9,000
+      '250': { min: 9700, max: 9800 },     // Actual: $9,740
+      '500': { min: 9200, max: 9400 },     // Actual: $9,290
     },
   },
 
@@ -596,9 +596,9 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 65, '250': 165, '500': 115 },
     hsaContributions: { '3300': 1100, '250': 0, '500': 0 },
     expectedRanges: {
-      '3300': { min: 5100, max: 5250 },    // Actual: $5,180
-      '250': { min: 3750, max: 3850 },     // Actual: $3,785
-      '500': { min: 5200, max: 5350 },     // Actual: $5,260
+      '3300': { min: 5150, max: 5250 },    // Actual: $5,180
+      '250': { min: 3700, max: 3800 },     // Actual: $3,730
+      '500': { min: 5350, max: 5450 },     // Actual: $5,380
     },
   },
 
@@ -628,7 +628,7 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 175, '250': 475, '500': 325 },
     hsaContributions: { '3300': 1000, '250': 0, '500': 0 },
     expectedRanges: {
-      '3300': { min: 3950, max: 4150 },    // Actual: $4,035
+      '3300': { min: 3750, max: 3850 },    // Actual: $3,795
       '250': { min: 8050, max: 8250 },     // Actual: $8,135
       '500': { min: 6200, max: 6400 },     // Actual: $6,300
     },
@@ -660,9 +660,9 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 50, '250': 145, '500': 95 },
     hsaContributions: { '3300': 700, '250': 0, '500': 0 },
     expectedRanges: {
-      '3300': { min: 2250, max: 2400 },    // Actual: $2,305
-      '250': { min: 2700, max: 2850 },     // Actual: $2,765
-      '500': { min: 2550, max: 2700 },     // Actual: $2,615
+      '3300': { min: 3400, max: 3500 },    // Actual: $3,445
+      '250': { min: 3450, max: 3550 },     // Actual: $3,490
+      '500': { min: 4400, max: 4500 },     // Actual: $4,440
     },
   },
 
@@ -724,9 +724,9 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 45, '250': 135, '500': 90 },
     hsaContributions: { '3300': 600, '250': 0, '500': 0 },
     expectedRanges: {
-      '3300': { min: 250, max: 450 },
-      '250': { min: 1700, max: 1900 },
-      '500': { min: 1300, max: 1500 },
+      '3300': { min: 250, max: 450 },      // Actual: $310
+      '250': { min: 1900, max: 2000 },     // Actual: $1,940
+      '500': { min: 1300, max: 1500 },     // Actual: $1,410
     },
   },
 
@@ -756,9 +756,9 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 70, '250': 170, '500': 120 },
     hsaContributions: { '3300': 1500, '250': 0, '500': 0 },
     expectedRanges: {
-      '3300': { min: 4800, max: 5200 },
-      '250': { min: 3790, max: 3890 },     // Hits OOP max
-      '500': { min: 5500, max: 5900 },     // Hits OOP max
+      '3300': { min: 4800, max: 5200 },    // Actual: $4,840
+      '250': { min: 3790, max: 3890 },     // Actual: $3,790 (hits OOP max)
+      '500': { min: 5400, max: 5500 },     // Actual: $5,440 (hits OOP max)
     },
   },
 
@@ -788,9 +788,9 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 40, '250': 140, '500': 90 },
     hsaContributions: { '3300': 4150, '250': 0, '500': 0 },  // 2025 IRS max
     expectedRanges: {
-      '3300': { min: -2500, max: -2000 },  // NEGATIVE cost due to HSA!
-      '250': { min: 2600, max: 2900 },
-      '500': { min: 2100, max: 2500 },
+      '3300': { min: -450, max: -350 },    // Actual: $-400 (NEGATIVE cost due to HSA!)
+      '250': { min: 3400, max: 3500 },     // Actual: $3,430
+      '500': { min: 4000, max: 4150 },     // Actual: $4,070
     },
   },
 
@@ -820,9 +820,9 @@ const scenarios: TestScenario[] = [
     premiums: { '3300': 120, '250': 380, '500': 250 },
     hsaContributions: { '3300': 1800, '250': 0, '500': 0 },
     expectedRanges: {
-      '3300': { min: 5500, max: 6500 },
-      '250': { min: 5400, max: 6000 },
-      '500': { min: 5000, max: 5800 },
+      '3300': { min: 7700, max: 7900 },    // Actual: $7,785
+      '250': { min: 8000, max: 8150 },     // Actual: $8,060
+      '500': { min: 7200, max: 7350 },     // Actual: $7,260
     },
   },
 

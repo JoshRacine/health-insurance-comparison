@@ -4,10 +4,12 @@ import { useState } from 'react';
 import { plans, defaultUsageInputs, UsageInputs } from '@/lib/plans';
 import { calculatePlanCost, CostBreakdown } from '@/lib/calculator';
 import Tooltip from '@/components/Tooltip';
+import { testScenarios } from '@/lib/testScenarios';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'family' | 'individual'>('family');
   const [usage, setUsage] = useState<UsageInputs>(defaultUsageInputs);
+  const [expandedBreakdowns, setExpandedBreakdowns] = useState<Record<string, Record<string, boolean>>>({});
 
   // Premiums (monthly) for each plan
   const [premiums, setPremiums] = useState({
@@ -58,18 +60,28 @@ export default function Home() {
     setHSAContributions({ ...hsaContributions, [planKey]: value });
   };
 
+  const toggleBreakdown = (planKey: string, field: string) => {
+    setExpandedBreakdowns(prev => ({
+      ...prev,
+      [planKey]: {
+        ...(prev[planKey] || {}),
+        [field]: !(prev[planKey]?.[field] || false)
+      }
+    }));
+  };
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-7xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-2 text-gray-800">
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 sm:py-8 px-3 sm:px-4">
+      <div className="max-w-7xl mx-auto w-full">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 px-2">
           Health Insurance Cost Comparison
         </h1>
-        <p className="text-center text-gray-600 mb-2">
+        <p className="text-center text-gray-600 mb-2 text-sm sm:text-base px-2">
           Aetna Plans: HDHP 3300 vs POS 250 vs POS 500
         </p>
-        <div className="text-center mb-8">
-          <p className="text-sm text-gray-600 mb-2">Download Official Plan Documents:</p>
-          <div className="flex justify-center gap-4">
+        <div className="text-center mb-6 sm:mb-8 px-2">
+          <p className="text-xs sm:text-sm text-gray-600 mb-2">Download Official Plan Documents:</p>
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             <a href="/Atena 3300.pdf" download className="text-blue-600 hover:text-blue-800 underline text-sm">
               HDHP 3300 PDF
             </a>
@@ -83,11 +95,11 @@ export default function Home() {
         </div>
 
         {/* Tabs */}
-        <div className="flex justify-center mb-8">
-          <div className="bg-white rounded-lg shadow-md p-1 inline-flex">
+        <div className="flex justify-center mb-6 sm:mb-8 px-2">
+          <div className="bg-white rounded-lg shadow-md p-1 inline-flex w-full sm:w-auto max-w-md">
             <button
               onClick={() => setActiveTab('family')}
-              className={`px-6 py-3 rounded-md font-semibold transition-all ${
+              className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 sm:py-3 rounded-md font-semibold transition-all text-sm sm:text-base ${
                 activeTab === 'family'
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-600 hover:bg-gray-100'
@@ -97,7 +109,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setActiveTab('individual')}
-              className={`px-6 py-3 rounded-md font-semibold transition-all ${
+              className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 sm:py-3 rounded-md font-semibold transition-all text-sm sm:text-base ${
                 activeTab === 'individual'
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-600 hover:bg-gray-100'
@@ -108,14 +120,106 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Input Panel */}
           <div className="lg:col-span-1">
-            <div className="bg-white rounded-lg shadow-lg p-6 sticky top-4">
-              <h2 className="text-2xl font-bold mb-4 text-gray-800">Usage Inputs</h2>
+            <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6 lg:sticky lg:top-4">
+              <h2 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-800">Usage Inputs</h2>
+
+              {/* Premiums and HSA Contributions */}
+              <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h3 className="font-semibold text-gray-700 mb-3">Plan Costs</h3>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="text-xs font-medium text-gray-500 flex items-center">Plan</div>
+                    <div className="text-xs font-medium text-gray-500 text-center">Monthly Premium</div>
+                    <div className="text-xs font-medium text-gray-500 text-center">HSA Employer Contrib (Annual)</div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 items-center">
+                    <div className="text-sm font-medium text-gray-700">POS 250</div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={premiums['250']}
+                      onChange={(e) => updatePremium('250', parseInt(e.target.value) || 0)}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                      placeholder="$0"
+                    />
+                    <div className="text-xs text-center text-gray-400">N/A</div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 items-center">
+                    <div className="text-sm font-medium text-gray-700">POS 500</div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={premiums['500']}
+                      onChange={(e) => updatePremium('500', parseInt(e.target.value) || 0)}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                      placeholder="$0"
+                    />
+                    <div className="text-xs text-center text-gray-400">N/A</div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 items-center">
+                    <div className="text-sm font-medium text-gray-700">HDHP 3300</div>
+                    <input
+                      type="number"
+                      min="0"
+                      step="10"
+                      value={premiums['3300']}
+                      onChange={(e) => updatePremium('3300', parseInt(e.target.value) || 0)}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                      placeholder="$0"
+                    />
+                    <input
+                      type="number"
+                      min="0"
+                      step="100"
+                      value={hsaContributions['3300']}
+                      onChange={(e) => updateHSA('3300', parseInt(e.target.value) || 0)}
+                      className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
+                      placeholder="$0"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Test Scenarios Dropdown */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  🎯 Try a Sample Scenario {isFamily ? '(Family)' : '(Individual)'}
+                  <Tooltip content="Pre-configured healthcare scenarios to help you explore different situations. Select one to auto-fill usage inputs with realistic values. Your premiums and HSA contributions will not be changed.">
+                    <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
+                  </Tooltip>
+                </label>
+                <select
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white"
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      const scenario = testScenarios[parseInt(e.target.value)];
+                      setUsage(scenario.usage);
+                      // Don't change premiums or HSA - only usage data
+                      setActiveTab(scenario.isFamily ? 'family' : 'individual');
+                    }
+                  }}
+                  value=""
+                  key={activeTab}
+                >
+                  <option value="">-- Select a scenario to auto-fill inputs --</option>
+                  {testScenarios
+                    .map((scenario, index) => ({ scenario, index }))
+                    .filter(({ scenario }) => scenario.isFamily === isFamily)
+                    .map(({ scenario, index }) => (
+                      <option key={index} value={index}>
+                        {scenario.name} - {scenario.description}
+                      </option>
+                    ))}
+                </select>
+              </div>
 
               {isFamily && (
-                <div className="mb-4 p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+                <div className="mb-4 p-2 sm:p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
                   <p className="text-sm text-blue-800">
                     <strong>💡 All usage values are for your entire family combined.</strong>
                     {' '}Add up visits/prescriptions for all family members.
@@ -404,7 +508,7 @@ export default function Home() {
 
           {/* Results Panel */}
           <div className="lg:col-span-2">
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {Object.entries(plans).map(([key, plan]) => {
                 const result = planResults[key];
                 return (
@@ -418,106 +522,275 @@ export default function Home() {
                     </div>
 
                     <div className="p-6">
-                      {/* Premium and HSA inputs */}
-                      <div className="grid md:grid-cols-3 gap-4 mb-6 p-4 bg-gray-50 rounded-lg">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Monthly Premium
-                          </label>
-                          <input
-                            type="number"
-                            min="0"
-                            step="10"
-                            value={premiums[key as keyof typeof premiums]}
-                            onChange={(e) => updatePremium(key, parseInt(e.target.value) || 0)}
-                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                            placeholder="$0"
-                          />
-                        </div>
-                        {key === '3300' && (
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Employer HSA Contribution (Annual)
-                            </label>
-                            <input
-                              type="number"
-                              min="0"
-                              step="100"
-                              value={hsaContributions[key as keyof typeof hsaContributions]}
-                              onChange={(e) => updateHSA(key, parseInt(e.target.value) || 0)}
-                              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                              placeholder="$0"
-                            />
-                          </div>
-                        )}
-                      </div>
-
                       {/* Cost Breakdown */}
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-gray-600">
-                            Annual Premiums
-                            <Tooltip content={`Monthly premium: ${formatCurrency(premiums[key as keyof typeof premiums])} × 12 months = ${formatCurrency(result.annualPremiums)}`}>
-                              <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
-                            </Tooltip>
-                          </span>
-                          <span className="font-semibold text-gray-900">{formatCurrency(result.annualPremiums)}</span>
+                        <div className="border-b">
+                          <div
+                            className="flex justify-between items-center py-2 cursor-pointer hover:bg-gray-50"
+                            onClick={() => toggleBreakdown(key, 'annualPremiums')}
+                          >
+                            <span className="text-gray-600 flex items-center">
+                              <svg
+                                className={`w-4 h-4 mr-2 transition-transform ${expandedBreakdowns[key]?.annualPremiums ? 'rotate-90' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              Annual Premiums
+                            </span>
+                            <span className="font-semibold text-gray-900">{formatCurrency(result.annualPremiums)}</span>
+                          </div>
+                          {expandedBreakdowns[key]?.annualPremiums && (
+                            <div className="pl-8 pb-3 space-y-1 text-sm bg-gray-50">
+                              <div className="text-gray-600">
+                                Monthly premium: {formatCurrency(premiums[key as keyof typeof premiums])} × 12 months = {formatCurrency(result.annualPremiums)}
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-gray-600">
-                            Deductible Used
-                            <Tooltip content={`Amount applied to deductible from lab/imaging costs. Deductible limit: ${formatCurrency(isFamily ? plan.deductibleFamily : plan.deductibleIndividual)}. After deductible is met, most services are covered at plan rates.`}>
-                              <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
-                            </Tooltip>
-                          </span>
-                          <span className="font-semibold text-gray-900">{formatCurrency(result.deductible)}</span>
+                        <div className="border-b">
+                          <div
+                            className="flex justify-between items-center py-2 cursor-pointer hover:bg-gray-50"
+                            onClick={() => toggleBreakdown(key, 'deductible')}
+                          >
+                            <span className="text-gray-600 flex items-center">
+                              <svg
+                                className={`w-4 h-4 mr-2 transition-transform ${expandedBreakdowns[key]?.deductible ? 'rotate-90' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              Deductible Used
+                            </span>
+                            <span className="font-semibold text-gray-900">{formatCurrency(result.deductible)}</span>
+                          </div>
+                          {expandedBreakdowns[key]?.deductible && (
+                            <div className="pl-8 pb-3 space-y-1 text-sm bg-gray-50">
+                              <div className="text-gray-600">
+                                Amount applied to deductible from lab/imaging costs.
+                              </div>
+                              <div className="text-gray-600">
+                                Deductible limit: {formatCurrency(isFamily ? plan.deductibleFamily : plan.deductibleIndividual)}
+                              </div>
+                              <div className="text-gray-600">
+                                After deductible is met, most services are covered at plan rates.
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-gray-600">
-                            Copays
-                            <Tooltip content={`Total copays: Primary care (${usage.primaryCareVisits} × $${plan.primaryCareCopay}) + Specialist (${usage.specialistVisits} × $${plan.specialistCopay}) + ER (${usage.emergencyRoomVisits} × $${plan.emergencyRoomCopay}) + Urgent care (${usage.urgentCareVisits} × $${plan.urgentCareCopay}) + Hospital (${usage.hospitalStays} × $${plan.hospitalCopay}) + Mental health (${usage.mentalHealthTherapySessions} × $${plan.mentalHealthOfficeCopay}) + Outpatient surgery (${usage.outpatientSurgeries} × $${plan.outpatientSurgeryCopay})`}>
-                              <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
-                            </Tooltip>
-                          </span>
-                          <span className="font-semibold text-gray-900">{formatCurrency(result.copays)}</span>
+                        <div className="border-b">
+                          <div
+                            className="flex justify-between items-center py-2 cursor-pointer hover:bg-gray-50"
+                            onClick={() => toggleBreakdown(key, 'copays')}
+                          >
+                            <span className="text-gray-600 flex items-center">
+                              <svg
+                                className={`w-4 h-4 mr-2 transition-transform ${expandedBreakdowns[key]?.copays ? 'rotate-90' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              Copays
+                            </span>
+                            <span className="font-semibold text-gray-900">{formatCurrency(result.copays)}</span>
+                          </div>
+                          {expandedBreakdowns[key]?.copays && (
+                            <div className="pl-8 pb-3 space-y-1 text-sm bg-gray-50">
+                              {usage.primaryCareVisits > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Primary Care ({usage.primaryCareVisits} × ${plan.primaryCareCopay})</span>
+                                  <span>{formatCurrency(usage.primaryCareVisits * plan.primaryCareCopay)}</span>
+                                </div>
+                              )}
+                              {usage.specialistVisits > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Specialist ({usage.specialistVisits} × ${plan.specialistCopay})</span>
+                                  <span>{formatCurrency(usage.specialistVisits * plan.specialistCopay)}</span>
+                                </div>
+                              )}
+                              {usage.emergencyRoomVisits > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Emergency Room ({usage.emergencyRoomVisits} × ${plan.emergencyRoomCopay})</span>
+                                  <span>{formatCurrency(usage.emergencyRoomVisits * plan.emergencyRoomCopay)}</span>
+                                </div>
+                              )}
+                              {usage.urgentCareVisits > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Urgent Care ({usage.urgentCareVisits} × ${plan.urgentCareCopay})</span>
+                                  <span>{formatCurrency(usage.urgentCareVisits * plan.urgentCareCopay)}</span>
+                                </div>
+                              )}
+                              {usage.hospitalStays > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Hospital Stays ({usage.hospitalStays} × ${plan.hospitalCopay})</span>
+                                  <span>{formatCurrency(usage.hospitalStays * plan.hospitalCopay)}</span>
+                                </div>
+                              )}
+                              {usage.mentalHealthTherapySessions > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Mental Health ({usage.mentalHealthTherapySessions} × ${plan.mentalHealthOfficeCopay})</span>
+                                  <span>{formatCurrency(usage.mentalHealthTherapySessions * plan.mentalHealthOfficeCopay)}</span>
+                                </div>
+                              )}
+                              {usage.outpatientSurgeries > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Outpatient Surgery ({usage.outpatientSurgeries} × ${plan.outpatientSurgeryCopay})</span>
+                                  <span>{formatCurrency(usage.outpatientSurgeries * plan.outpatientSurgeryCopay)}</span>
+                                </div>
+                              )}
+                              {result.copays === 0 && (
+                                <div className="text-gray-500 italic">No copays entered</div>
+                              )}
+                            </div>
+                          )}
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-gray-600">
-                            Prescriptions
-                            <Tooltip content={`Annual Rx costs: Generic (${usage.genericDrugsPerMonth}/mo × $${plan.genericDrugCopay} × 12) + Preferred brand (${usage.preferredBrandDrugsPerMonth}/mo × $${plan.preferredBrandDrugCopay} × 12) + Non-preferred (${usage.nonPreferredBrandDrugsPerMonth}/mo × $${plan.nonPreferredBrandDrugCopay} × 12) + Specialty (${usage.specialtyDrugsPerMonth}/mo × $250 max × 12)`}>
-                              <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
-                            </Tooltip>
-                          </span>
-                          <span className="font-semibold text-gray-900">{formatCurrency(result.prescriptions)}</span>
+                        <div className="border-b">
+                          <div
+                            className="flex justify-between items-center py-2 cursor-pointer hover:bg-gray-50"
+                            onClick={() => toggleBreakdown(key, 'prescriptions')}
+                          >
+                            <span className="text-gray-600 flex items-center">
+                              <svg
+                                className={`w-4 h-4 mr-2 transition-transform ${expandedBreakdowns[key]?.prescriptions ? 'rotate-90' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              Prescriptions
+                            </span>
+                            <span className="font-semibold text-gray-900">{formatCurrency(result.prescriptions)}</span>
+                          </div>
+                          {expandedBreakdowns[key]?.prescriptions && (
+                            <div className="pl-8 pb-3 space-y-1 text-sm bg-gray-50">
+                              {usage.genericDrugsPerMonth > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Generic ({usage.genericDrugsPerMonth}/mo × ${plan.genericDrugCopay} × 12)</span>
+                                  <span>{formatCurrency(usage.genericDrugsPerMonth * plan.genericDrugCopay * 12)}</span>
+                                </div>
+                              )}
+                              {usage.preferredBrandDrugsPerMonth > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Preferred Brand ({usage.preferredBrandDrugsPerMonth}/mo × ${plan.preferredBrandDrugCopay} × 12)</span>
+                                  <span>{formatCurrency(usage.preferredBrandDrugsPerMonth * plan.preferredBrandDrugCopay * 12)}</span>
+                                </div>
+                              )}
+                              {usage.nonPreferredBrandDrugsPerMonth > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Non-Preferred ({usage.nonPreferredBrandDrugsPerMonth}/mo × ${plan.nonPreferredBrandDrugCopay} × 12)</span>
+                                  <span>{formatCurrency(usage.nonPreferredBrandDrugsPerMonth * plan.nonPreferredBrandDrugCopay * 12)}</span>
+                                </div>
+                              )}
+                              {usage.specialtyDrugsPerMonth > 0 && (
+                                <div className="flex justify-between text-gray-600">
+                                  <span>Specialty ({usage.specialtyDrugsPerMonth}/mo × $250 max × 12)</span>
+                                  <span>{formatCurrency(usage.specialtyDrugsPerMonth * 250 * 12)}</span>
+                                </div>
+                              )}
+                              {result.prescriptions === 0 && (
+                                <div className="text-gray-500 italic">No prescriptions entered</div>
+                              )}
+                            </div>
+                          )}
                         </div>
                         {result.maternityCosts > 0 && (
-                          <div className="flex justify-between items-center py-2 border-b bg-pink-50 px-3 -mx-3">
-                            <span className="text-gray-700 font-medium">
-                              Maternity Costs
-                              <Tooltip content={`Official SBC estimate for pregnancy/childbirth: ${formatCurrency(result.maternityCosts)}. Includes prenatal visits, lab work, ultrasounds, and hospital delivery. Based on Summary of Benefits and Coverage examples.`}>
-                                <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
-                              </Tooltip>
-                            </span>
-                            <span className="font-semibold text-gray-900">{formatCurrency(result.maternityCosts)}</span>
+                          <div className="border-b bg-pink-50 -mx-3 px-3">
+                            <div
+                              className="flex justify-between items-center py-2 cursor-pointer hover:bg-pink-100"
+                              onClick={() => toggleBreakdown(key, 'maternity')}
+                            >
+                              <span className="text-gray-700 font-medium flex items-center">
+                                <svg
+                                  className={`w-4 h-4 mr-2 transition-transform ${expandedBreakdowns[key]?.maternity ? 'rotate-90' : ''}`}
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                </svg>
+                                Maternity Costs
+                              </span>
+                              <span className="font-semibold text-gray-900">{formatCurrency(result.maternityCosts)}</span>
+                            </div>
+                            {expandedBreakdowns[key]?.maternity && (
+                              <div className="pl-8 pb-3 space-y-1 text-sm bg-pink-100">
+                                <div className="text-gray-600">
+                                  Official SBC estimate for pregnancy/childbirth: {formatCurrency(result.maternityCosts)}
+                                </div>
+                                <div className="text-gray-600">
+                                  Includes prenatal visits, lab work, ultrasounds, and hospital delivery.
+                                </div>
+                                <div className="text-gray-600">
+                                  Based on Summary of Benefits and Coverage examples.
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
-                        <div className="flex justify-between items-center py-2 border-b">
-                          <span className="text-gray-600">
-                            Other Medical Costs
-                            <Tooltip content="Lab tests/X-rays + Imaging (CT/PET/MRI) costs after deductible is applied. Any costs beyond deductible up to out-of-pocket max.">
-                              <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
-                            </Tooltip>
-                          </span>
-                          <span className="font-semibold text-gray-900">{formatCurrency(result.otherCosts)}</span>
+                        <div className="border-b">
+                          <div
+                            className="flex justify-between items-center py-2 cursor-pointer hover:bg-gray-50"
+                            onClick={() => toggleBreakdown(key, 'otherCosts')}
+                          >
+                            <span className="text-gray-600 flex items-center">
+                              <svg
+                                className={`w-4 h-4 mr-2 transition-transform ${expandedBreakdowns[key]?.otherCosts ? 'rotate-90' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              Other Medical Costs
+                            </span>
+                            <span className="font-semibold text-gray-900">{formatCurrency(result.otherCosts)}</span>
+                          </div>
+                          {expandedBreakdowns[key]?.otherCosts && (
+                            <div className="pl-8 pb-3 space-y-1 text-sm bg-gray-50">
+                              <div className="text-gray-600">
+                                Lab tests/X-rays + Imaging (CT/PET/MRI) costs after deductible is applied.
+                              </div>
+                              <div className="text-gray-600">
+                                Any costs beyond deductible up to out-of-pocket max.
+                              </div>
+                            </div>
+                          )}
                         </div>
-                        <div className="flex justify-between items-center py-2 border-b border-gray-300">
-                          <span className="text-gray-600 font-medium">
-                            Total Out-of-Pocket (Medical)
-                            <Tooltip content={`Sum of all medical costs (deductible + copays + prescriptions + other costs), capped at out-of-pocket maximum of ${formatCurrency(isFamily ? plan.oopMaxFamily : plan.oopMaxIndividual)}`}>
-                              <span className="ml-1 text-blue-500 text-xs">ⓘ</span>
-                            </Tooltip>
-                          </span>
-                          <span className="font-semibold text-gray-900">{formatCurrency(result.totalOutOfPocket)}</span>
+                        <div className="border-b border-gray-300">
+                          <div
+                            className="flex justify-between items-center py-2 cursor-pointer hover:bg-gray-50"
+                            onClick={() => toggleBreakdown(key, 'totalOOP')}
+                          >
+                            <span className="text-gray-600 font-medium flex items-center">
+                              <svg
+                                className={`w-4 h-4 mr-2 transition-transform ${expandedBreakdowns[key]?.totalOOP ? 'rotate-90' : ''}`}
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              Total Out-of-Pocket (Medical)
+                            </span>
+                            <span className="font-semibold text-gray-900">{formatCurrency(result.totalOutOfPocket)}</span>
+                          </div>
+                          {expandedBreakdowns[key]?.totalOOP && (
+                            <div className="pl-8 pb-3 space-y-1 text-sm bg-gray-50">
+                              <div className="text-gray-600">
+                                Sum of all medical costs (deductible + copays + prescriptions + other costs).
+                              </div>
+                              <div className="text-gray-600">
+                                Capped at out-of-pocket maximum of {formatCurrency(isFamily ? plan.oopMaxFamily : plan.oopMaxIndividual)}.
+                              </div>
+                            </div>
+                          )}
                         </div>
                         {result.employerHSAContribution > 0 && (
                           <div className="flex justify-between items-center py-2 border-b border-green-300 bg-green-50 px-3 -mx-3">
