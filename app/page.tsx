@@ -71,15 +71,15 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 sm:py-8 px-3 sm:px-4">
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 sm:py-8 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto w-full">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800 px-2">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800">
           Health Insurance Cost Comparison
         </h1>
-        <p className="text-center text-gray-600 mb-2 text-sm sm:text-base px-2">
+        <p className="text-center text-gray-600 mb-2 text-sm sm:text-base">
           Aetna Plans: HDHP 3300 vs POS 250 vs POS 500
         </p>
-        <div className="text-center mb-6 sm:mb-8 px-2">
+        <div className="text-center mb-6 sm:mb-8">
           <p className="text-xs sm:text-sm text-gray-600 mb-2">Download Official Plan Documents:</p>
           <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
             <a href="/Atena 3300.pdf" download className="text-blue-600 hover:text-blue-800 underline text-sm">
@@ -95,7 +95,7 @@ export default function Home() {
         </div>
 
         {/* Tabs */}
-        <div className="flex justify-center mb-6 sm:mb-8 px-2">
+        <div className="flex justify-center mb-6 sm:mb-8">
           <div className="bg-white rounded-lg shadow-md p-1 inline-flex w-full sm:w-auto max-w-md">
             <button
               onClick={() => setActiveTab('family')}
