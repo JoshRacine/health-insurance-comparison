@@ -141,8 +141,9 @@ export default function Home() {
                       type="number"
                       min="0"
                       step="10"
-                      value={premiums['250']}
+                      value={premiums['250'] || ''}
                       onChange={(e) => updatePremium('250', parseInt(e.target.value) || 0)}
+                      onFocus={(e) => e.target.select()}
                       className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="$0"
                     />
@@ -154,8 +155,9 @@ export default function Home() {
                       type="number"
                       min="0"
                       step="10"
-                      value={premiums['500']}
+                      value={premiums['500'] || ''}
                       onChange={(e) => updatePremium('500', parseInt(e.target.value) || 0)}
+                      onFocus={(e) => e.target.select()}
                       className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="$0"
                     />
@@ -167,8 +169,9 @@ export default function Home() {
                       type="number"
                       min="0"
                       step="10"
-                      value={premiums['3300']}
+                      value={premiums['3300'] || ''}
                       onChange={(e) => updatePremium('3300', parseInt(e.target.value) || 0)}
+                      onFocus={(e) => e.target.select()}
                       className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="$0"
                     />
@@ -176,8 +179,9 @@ export default function Home() {
                       type="number"
                       min="0"
                       step="100"
-                      value={hsaContributions['3300']}
+                      value={hsaContributions['3300'] || ''}
                       onChange={(e) => updateHSA('3300', parseInt(e.target.value) || 0)}
+                      onFocus={(e) => e.target.select()}
                       className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
                       placeholder="$0"
                     />
@@ -238,8 +242,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="2"
-                    value={usage.familyMembers}
+                    value={usage.familyMembers || ''}
                     onChange={(e) => updateUsage('familyMembers', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -258,8 +263,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.primaryCareVisits}
+                    value={usage.primaryCareVisits || ''}
                     onChange={(e) => updateUsage('primaryCareVisits', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -273,8 +279,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.specialistVisits}
+                    value={usage.specialistVisits || ''}
                     onChange={(e) => updateUsage('specialistVisits', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -293,8 +300,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.emergencyRoomVisits}
+                    value={usage.emergencyRoomVisits || ''}
                     onChange={(e) => updateUsage('emergencyRoomVisits', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -308,8 +316,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.urgentCareVisits}
+                    value={usage.urgentCareVisits || ''}
                     onChange={(e) => updateUsage('urgentCareVisits', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -323,8 +332,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.hospitalStays}
+                    value={usage.hospitalStays || ''}
                     onChange={(e) => updateUsage('hospitalStays', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -343,8 +353,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.genericDrugsPerMonth}
+                    value={usage.genericDrugsPerMonth || ''}
                     onChange={(e) => updateUsage('genericDrugsPerMonth', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -358,8 +369,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.preferredBrandDrugsPerMonth}
+                    value={usage.preferredBrandDrugsPerMonth || ''}
                     onChange={(e) => updateUsage('preferredBrandDrugsPerMonth', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -373,8 +385,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.nonPreferredBrandDrugsPerMonth}
+                    value={usage.nonPreferredBrandDrugsPerMonth || ''}
                     onChange={(e) => updateUsage('nonPreferredBrandDrugsPerMonth', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -388,8 +401,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.specialtyDrugsPerMonth}
+                    value={usage.specialtyDrugsPerMonth || ''}
                     onChange={(e) => updateUsage('specialtyDrugsPerMonth', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -408,8 +422,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.mentalHealthTherapySessions}
+                    value={usage.mentalHealthTherapySessions || ''}
                     onChange={(e) => updateUsage('mentalHealthTherapySessions', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -423,8 +438,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.outpatientSurgeries}
+                    value={usage.outpatientSurgeries || ''}
                     onChange={(e) => updateUsage('outpatientSurgeries', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -438,8 +454,9 @@ export default function Home() {
                   <input
                     type="number"
                     min="0"
-                    value={usage.physicalTherapySessions}
+                    value={usage.physicalTherapySessions || ''}
                     onChange={(e) => updateUsage('physicalTherapySessions', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                   />
                 </div>
@@ -479,8 +496,9 @@ export default function Home() {
                     type="number"
                     min="0"
                     step="100"
-                    value={usage.labTestsXrays}
+                    value={usage.labTestsXrays || ''}
                     onChange={(e) => updateUsage('labTestsXrays', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                     placeholder="e.g. 500"
                   />
@@ -496,8 +514,9 @@ export default function Home() {
                     type="number"
                     min="0"
                     step="100"
-                    value={usage.imagingCTPETMRI}
+                    value={usage.imagingCTPETMRI || ''}
                     onChange={(e) => updateUsage('imagingCTPETMRI', parseInt(e.target.value) || 0)}
+                    onFocus={(e) => e.target.select()}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                     placeholder="e.g. 1500"
                   />
