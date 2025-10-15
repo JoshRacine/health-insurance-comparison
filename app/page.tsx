@@ -71,8 +71,8 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 sm:py-8 px-4 sm:px-6">
-      <div className="max-w-7xl mx-auto w-full">
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-4 sm:py-8">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-2 text-gray-800">
           Health Insurance Cost Comparison
         </h1>
@@ -96,7 +96,7 @@ export default function Home() {
 
         {/* Tabs */}
         <div className="flex justify-center mb-6 sm:mb-8">
-          <div className="bg-white rounded-lg shadow-md p-1 inline-flex w-full sm:w-auto max-w-md">
+          <div className="bg-white rounded-lg shadow-md p-1 inline-flex max-w-md">
             <button
               onClick={() => setActiveTab('family')}
               className={`flex-1 sm:flex-initial px-4 sm:px-6 py-2 sm:py-3 rounded-md font-semibold transition-all text-sm sm:text-base ${
